@@ -16,10 +16,10 @@ void print_matrix(struct Matrix mat)
     printf("\n");
 }
 
-void write2file(const char * filename, struct Matrix mat)
+void write_matrix2file(const char * filename, struct Matrix mat)
 {
     FILE * file = NULL;
-    file = fopen(filename,'w'); 
+    file = fopen(filename,"w"); 
     if (file == NULL) {fputs("File error", stderr); exit(1);}
     int row = mat.row;
     int col = mat.col;
@@ -27,10 +27,11 @@ void write2file(const char * filename, struct Matrix mat)
     {
         for(int j=0;j<col;j++)
         {
-            fprintf(filename,"%f ",mat.data[i*col+j]);
+            fprintf(file,"%6.2f ",mat.data[i*col+j]);
         }
-        fprintf(filename,"\n");
+        fprintf(file,"\n");
     }
+    fclose(file);
 }
 
 struct Matrix read_matrix(struct Matrix mat)
@@ -61,8 +62,6 @@ struct Matrix read_matrix_from_file(struct Matrix  mat, const char* dir)
         for(int j=0;j<mat.col;j++)
         {          
             fscanf(file,"%f",&mat.data[i*mat.row+j]);
-            // mat.data[i*mat.row+j] = (int)(mat.data[i*mat.row+j]*1000);
-            // mat.data[i*mat.row+j] = mat.data[i*mat.row+j]/1000;
         }
     }
     
