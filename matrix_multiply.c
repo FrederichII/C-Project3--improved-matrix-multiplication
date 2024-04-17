@@ -157,6 +157,7 @@ struct Matrix mat_assemble(struct Matrix C11, struct Matrix C12, struct Matrix C
 
 struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
 {
+    printf("run here:line 160\n");
     int rowA = A.row;
     int colA = A.col;
     int rowB = B.row;
@@ -206,6 +207,7 @@ struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
     B21 = get_matrix_block(m/2, m-1, 0, m/2-1, B);
     B22 = get_matrix_block(m/2, m-1, m/2, m-1, B);
 
+    printf("%d\n",m);
     // stage (2): compute linear combination of matrix blocks
     S1 = _ADD(A21,A22);
     S2 = _ADD(S1,_NEG(A11));
@@ -217,6 +219,7 @@ struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
     T3 = _ADD(B22,_NEG(B12));
     T4 = _ADD(B21,_NEG(T2));
     // stage (3): compute the product of the combinations, which is recursive
+    printf("run here:line 221\n");
     P1 = _WINO(A11,B11);
     P2 = _WINO(A12,B21);
     P3 = _WINO(S1,T1);
@@ -237,5 +240,6 @@ struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
     {
         C = get_matrix_block(0,C.row-2,0,C.col-2,C);
     }
+    
     return C;
 }

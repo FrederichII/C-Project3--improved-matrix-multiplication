@@ -27,7 +27,7 @@ void write_matrix2file(const char * filename, struct Matrix mat)
     {
         for(int j=0;j<col;j++)
         {
-            fprintf(file,"%6.2f ",mat.data[i*col+j]);
+            fprintf(file,"%8.2f ",mat.data[i*col+j]);
         }
         fprintf(file,"\n");
     }
