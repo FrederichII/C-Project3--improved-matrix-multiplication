@@ -14,10 +14,10 @@ int main(int argc, char * argv)
     struct Matrix A;
     struct Matrix B;
     struct Matrix C;
-    A = read_matrix_from_file(A,"./data/small/1.txt");
-    B = read_matrix_from_file(B,"./data/small/2.txt");
-    A = get_matrix_block(0,48,0,48,A);
-    B = get_matrix_block(0,48,0,48,B);
+    A = read_matrix_from_file(A,"./data/200by200/1.txt");
+    B = read_matrix_from_file(B,"./data/200by200/2.txt");
+    //A = get_matrix_block(0,48,0,48,A);
+    //B = get_matrix_block(0,48,0,48,B);
     //A = padding(A);
     //B = padding(B);
     C = naive_multiply_square(A, B);    

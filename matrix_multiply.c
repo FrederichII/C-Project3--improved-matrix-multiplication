@@ -202,7 +202,7 @@ struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
     struct Matrix U1, U2, U3, U4, U5, U6, U7;
     // result matrix
     struct Matrix C;
-   
+    printf("%d ",m);
     // stage(1): get matrix blocks
     A11 = get_matrix_block(0, m/2-1, 0, m/2-1, A);
     A12 = get_matrix_block(0, m/2-1, m/2, m-1, A);
