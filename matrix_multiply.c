@@ -2,6 +2,7 @@
 #include<math.h>
 #include"./include/matrix.h"
 #include"./include/multiply.h"
+#include"./include/matrixIO.h"
 #include<stdlib.h>
 
 #define EXIT_SUCCESS 0
@@ -24,7 +25,7 @@ struct Matrix naive_multiply_square(struct Matrix A, struct Matrix B)
     }
     if(!(rowA==rowB&&colA==colB))
     {
-        
+
         printf("Dimensions not equal\n");
         exit(EXIT_FAILURE);
     }
@@ -201,13 +202,13 @@ struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
     struct Matrix U1, U2, U3, U4, U5, U6, U7;
     // result matrix
     struct Matrix C;
-
+   
     // stage(1): get matrix blocks
     A11 = get_matrix_block(0, m/2-1, 0, m/2-1, A);
     A12 = get_matrix_block(0, m/2-1, m/2, m-1, A);
     A21 = get_matrix_block(m/2, m-1, 0, m/2-1, A);
     A22 = get_matrix_block(m/2, m-1, m/2, m-1, A);
-
+    
     B11 = get_matrix_block(0, m/2-1, 0, m/2-1, B);
     B12 = get_matrix_block(0, m/2-1, m/2, m-1, B);
     B21 = get_matrix_block(m/2, m-1, 0, m/2-1, B);
@@ -242,7 +243,7 @@ struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
     U6 = _ADD(U2,P3);
     U7 = _ADD(U6,P6); // C12
     C = mat_assemble(U1,U7,U4,U5);
-    struct Matrix result;
+    
     if(odd == 1)
     {
         C = get_matrix_block(0,C.row-2,0,C.col-2,C);
