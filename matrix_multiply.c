@@ -186,7 +186,7 @@ struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
     }
     int m = rowA;
     // recursion cut-off condition: m<=12
-    if(m <= 12)
+    if(m <= 250)
     {
         return _NAIVE(A, B);
     }
@@ -249,11 +249,11 @@ struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
     U7 = _ADD(U6,P6); // C12
     C = mat_assemble(U1,U7,U4,U5);
     
+    // post process: unpadding
     if(odd == 1)
     {
         C = get_matrix_block(0,C.row-2,0,C.col-2,C);
     }
-    
     
     return C;
 }
