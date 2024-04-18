@@ -33,7 +33,7 @@ struct Matrix naive_multiply_square(struct Matrix A, struct Matrix B)
     struct Matrix C;
     C.row = rowA;
     C.col = colA;
-    C.data = malloc(C.row*C.col*sizeof(float));
+    C.data = (float *)malloc(C.row*C.col*sizeof(float));
 
     for(int i=0;i<C.row*C.col;i++)
     {
@@ -64,7 +64,7 @@ struct Matrix mat_add(struct Matrix A, struct Matrix B)
     struct Matrix C;
     C.col = A.col;
     C.row = A.row; 
-    C.data = malloc(C.row*C.col*sizeof(float));
+    C.data = (float*)malloc(C.row*C.col*sizeof(float));
     for(int i=0;i<C.row*C.col;i++)
     {
         C.data[i] = 0;
@@ -81,14 +81,18 @@ struct Matrix mat_add(struct Matrix A, struct Matrix B)
 
 struct Matrix mat_neg(struct Matrix mat)
 {
+    struct Matrix result;
+    result.row = mat.row;
+    result.col = mat.col;
+    result.data = (float *)malloc(result.row * result.col * sizeof(float));
     for(int i=0;i<mat.row;i++)
     {
         for(int j=0;j<mat.col;j++)
         {
-            mat.data[i*mat.col + j] *= -1;
+            result.data[i*mat.col + j] = -1*mat.data[i*mat.col + j];
         }
     }
-    return mat;
+    return result;
 }
 
 // get the sub-matrix slice [x0:x1][y0:y1] of Matrix "mat".
@@ -97,7 +101,7 @@ struct Matrix get_matrix_block(int x0, int x1, int y0, int y1, struct Matrix mat
     struct Matrix block;
     block.row = x1-x0+1;
     block.col = y1-y0+1;
-    block.data = malloc(block.row*block.col*sizeof(float));
+    block.data = (float *)malloc(block.row*block.col*sizeof(float));
     int i=0;
     for(int m=x0;m<=x1;m++)
     {
@@ -119,7 +123,7 @@ struct Matrix padding(struct Matrix mat)
     int col = mat.col;
     padded.row = row+1;
     padded.col = col+1;
-    padded.data = malloc(padded.row*padded.col*sizeof(float));
+    padded.data = (float *)malloc(padded.row*padded.col*sizeof(float));
     int cursor = 0;
     for(int i=0;i<row;i++)
     {
@@ -149,7 +153,7 @@ struct Matrix mat_assemble(struct Matrix C11, struct Matrix C12, struct Matrix C
     struct Matrix C;
     C.row = C11.row + C21.row;
     C.col = C11.col + C12.col;
-    C.data = malloc(C.row*C.col*sizeof(float));
+    C.data = (float *)malloc(C.row*C.col*sizeof(float));
     for(int i=0;i<C.row;i++)
     {
         for(int j=0;j<C.col;j++)
@@ -202,7 +206,7 @@ struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
     struct Matrix U1, U2, U3, U4, U5, U6, U7;
     // result matrix
     struct Matrix C;
-    printf("%d ",m);
+    
     // stage(1): get matrix blocks
     A11 = get_matrix_block(0, m/2-1, 0, m/2-1, A);
     A12 = get_matrix_block(0, m/2-1, m/2, m-1, A);
