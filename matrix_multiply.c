@@ -24,6 +24,7 @@ struct Matrix naive_multiply_square(struct Matrix A, struct Matrix B)
     }
     if(!(rowA==rowB&&colA==colB))
     {
+        
         printf("Dimensions not equal\n");
         exit(EXIT_FAILURE);
     }
