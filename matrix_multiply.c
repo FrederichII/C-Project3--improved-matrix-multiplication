@@ -2,6 +2,7 @@
 #include<math.h>
 #include"./include/matrix.h"
 #include"./include/multiply.h"
+#include"./include/matrixIO.h"
 #include<stdlib.h>
 
 #define EXIT_SUCCESS 0
@@ -24,6 +25,7 @@ struct Matrix naive_multiply_square(struct Matrix A, struct Matrix B)
     }
     if(!(rowA==rowB&&colA==colB))
     {
+
         printf("Dimensions not equal\n");
         exit(EXIT_FAILURE);
     }
@@ -31,8 +33,9 @@ struct Matrix naive_multiply_square(struct Matrix A, struct Matrix B)
     struct Matrix C;
     C.row = rowA;
     C.col = colA;
-    
-    for(int i=0;i<sizeof(C.data)/sizeof(float);i++)
+    C.data = (float *)malloc(C.row*C.col*sizeof(float));
+
+    for(int i=0;i<C.row*C.col;i++)
     {
         C.data[i] = 0;
     }
@@ -61,7 +64,8 @@ struct Matrix mat_add(struct Matrix A, struct Matrix B)
     struct Matrix C;
     C.col = A.col;
     C.row = A.row; 
-    for(int i=0;i<sizeof(C.data)/sizeof(float);i++)
+    C.data = (float*)malloc(C.row*C.col*sizeof(float));
+    for(int i=0;i<C.row*C.col;i++)
     {
         C.data[i] = 0;
     }
@@ -69,7 +73,7 @@ struct Matrix mat_add(struct Matrix A, struct Matrix B)
     {
         for(int j=0;j<colA;j++)
         {
-            C.data[i*colA+j] = A.data[i*colA+j] + B.data[i*colA+j];
+            C.data[i*colA + j] = A.data[i*colA+j] + B.data[i*colA+j];
         }
     }
     return C;
@@ -77,14 +81,18 @@ struct Matrix mat_add(struct Matrix A, struct Matrix B)
 
 struct Matrix mat_neg(struct Matrix mat)
 {
+    struct Matrix result;
+    result.row = mat.row;
+    result.col = mat.col;
+    result.data = (float *)malloc(result.row * result.col * sizeof(float));
     for(int i=0;i<mat.row;i++)
     {
         for(int j=0;j<mat.col;j++)
         {
-            mat.data[i*mat.col + j] *= -1;
+            result.data[i*mat.col + j] = -1*mat.data[i*mat.col + j];
         }
     }
-    return mat;
+    return result;
 }
 
 // get the sub-matrix slice [x0:x1][y0:y1] of Matrix "mat".
@@ -93,6 +101,7 @@ struct Matrix get_matrix_block(int x0, int x1, int y0, int y1, struct Matrix mat
     struct Matrix block;
     block.row = x1-x0+1;
     block.col = y1-y0+1;
+    block.data = (float *)malloc(block.row*block.col*sizeof(float));
     int i=0;
     for(int m=x0;m<=x1;m++)
     {
@@ -114,6 +123,7 @@ struct Matrix padding(struct Matrix mat)
     int col = mat.col;
     padded.row = row+1;
     padded.col = col+1;
+    padded.data = (float *)malloc(padded.row*padded.col*sizeof(float));
     int cursor = 0;
     for(int i=0;i<row;i++)
     {
@@ -126,7 +136,7 @@ struct Matrix padding(struct Matrix mat)
         cursor ++;
     }
     cursor ++;
-    for(int i=0;i<padded.row;i++)
+    for(int i=0;i<padded.col;i++)
     {
         padded.data[cursor] = 0;
     }
@@ -143,6 +153,7 @@ struct Matrix mat_assemble(struct Matrix C11, struct Matrix C12, struct Matrix C
     struct Matrix C;
     C.row = C11.row + C21.row;
     C.col = C11.col + C12.col;
+    C.data = (float *)malloc(C.row*C.col*sizeof(float));
     for(int i=0;i<C.row;i++)
     {
         for(int j=0;j<C.col;j++)
@@ -157,6 +168,7 @@ struct Matrix mat_assemble(struct Matrix C11, struct Matrix C12, struct Matrix C
 
 struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
 {
+    
     int rowA = A.row;
     int colA = A.col;
     int rowB = B.row;
@@ -194,18 +206,19 @@ struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
     struct Matrix U1, U2, U3, U4, U5, U6, U7;
     // result matrix
     struct Matrix C;
-
+    
     // stage(1): get matrix blocks
     A11 = get_matrix_block(0, m/2-1, 0, m/2-1, A);
     A12 = get_matrix_block(0, m/2-1, m/2, m-1, A);
     A21 = get_matrix_block(m/2, m-1, 0, m/2-1, A);
     A22 = get_matrix_block(m/2, m-1, m/2, m-1, A);
-
+    
     B11 = get_matrix_block(0, m/2-1, 0, m/2-1, B);
     B12 = get_matrix_block(0, m/2-1, m/2, m-1, B);
     B21 = get_matrix_block(m/2, m-1, 0, m/2-1, B);
     B22 = get_matrix_block(m/2, m-1, m/2, m-1, B);
 
+    
     // stage (2): compute linear combination of matrix blocks
     S1 = _ADD(A21,A22);
     S2 = _ADD(S1,_NEG(A11));
@@ -217,6 +230,7 @@ struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
     T3 = _ADD(B22,_NEG(B12));
     T4 = _ADD(B21,_NEG(T2));
     // stage (3): compute the product of the combinations, which is recursive
+    
     P1 = _WINO(A11,B11);
     P2 = _WINO(A12,B21);
     P3 = _WINO(S1,T1);
@@ -233,9 +247,12 @@ struct Matrix Winograd_multiply_square(struct Matrix A, struct Matrix B)
     U6 = _ADD(U2,P3);
     U7 = _ADD(U6,P6); // C12
     C = mat_assemble(U1,U7,U4,U5);
+    
     if(odd == 1)
     {
         C = get_matrix_block(0,C.row-2,0,C.col-2,C);
     }
+    
+    
     return C;
 }
