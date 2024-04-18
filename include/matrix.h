@@ -2,5 +2,5 @@ struct Matrix
 {
     int row;
     int col;
-    float  data [40000] ;
+    float  data [10000] ;
 };
