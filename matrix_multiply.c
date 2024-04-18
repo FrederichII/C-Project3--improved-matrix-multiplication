@@ -1,9 +1,10 @@
 #include<stdio.h>
 #include<math.h>
+#include<stdlib.h>
 #include"./include/matrix.h"
 #include"./include/multiply.h"
 #include"./include/matrixIO.h"
-#include<stdlib.h>
+
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
