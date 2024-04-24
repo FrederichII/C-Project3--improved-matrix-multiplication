@@ -31,7 +31,7 @@ int main(int argc, char * argv)
         C = naive_multiply_square(A, B);
     }
     end1 = clock();    
-    //write_matrix2file("./data/out_naive.txt", C);
+    write_matrix2file("./data/out_naive.txt", C);
     start2 = clock();
     for(size_t i=0;i<test_times;i++)
     {
@@ -40,7 +40,7 @@ int main(int argc, char * argv)
     end2 = clock();
     time1 = (double)(end1 - start1) * 1000 / CLOCKS_PER_SEC / test_times;
     time2 = (double)(end2 - start2) * 1000 / CLOCKS_PER_SEC / test_times;
-    //write_matrix2file("./data/out_wino.txt", C);
+    write_matrix2file("./data/out_wino.txt", C);
     printf("time consumption of Naive MM is: %lf ms\n", time1);
     printf("time consumption of Winograd MM is: %lf ms\n", time2);
     free(C.data);
