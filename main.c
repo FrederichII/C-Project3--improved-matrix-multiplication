@@ -16,13 +16,9 @@ int main(int argc, char * argv)
     struct Matrix A;
     struct Matrix B;
     struct Matrix C;
-    A = read_matrix_from_file(A,"./data/1300by1300/1.txt");
-    B = read_matrix_from_file(B,"./data/1300by1300/2.txt");
+    A = read_matrix_from_file(A,"./data/1000by1000/1.txt");
+    B = read_matrix_from_file(B,"./data/1000by1000/2.txt");
     double time1, time2;
-    //A = get_matrix_block(0,9,0,9,A);
-    //B = get_matrix_block(0,9,0,9,B);
-    //A = padding(A);
-    //B = padding(B);
     clock_t start1, start2, end1, end2;
     start1 = clock();
     size_t test_times = 1;
